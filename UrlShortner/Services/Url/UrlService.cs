@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using shortid;
 using shortid.Configuration;
 using UrlShortner.Models;
@@ -90,9 +91,35 @@ namespace UrlShortner.Services.Url
 
         }
 
-        public void DeleteUrlByShortId(string shortId)
+        public string DeleteUrlByShortId(string shortId)
         {
-            throw new System.NotImplementedException();
+            string query = $"delete from urls where shortUrl='{shortId}'";
+
+            using (var sqlConnection = new SqlConnection(ConnectionString))
+            {
+                using (var tableCmd = sqlConnection.CreateCommand())
+                {
+                    sqlConnection.Open();
+                    try
+                    {
+                        tableCmd.CommandText = query;
+                        int affectedRow = tableCmd.ExecuteNonQuery();
+                        if (affectedRow == 0)
+                        {
+                            return $"Id {shortId} doesn't exist";
+                        }
+
+                        return $"Id {shortId} deleted Successfully";
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Something went wrong while deleting :{shortId}, \n Error is : {e.Message}");
+                        return null;
+                    }
+                    
+                }
+            }
+            
         }
 
         public List<ResponseUrl> GetUrlsByUserIdAndShortId(string userID, string shortId)
@@ -100,7 +127,36 @@ namespace UrlShortner.Services.Url
             throw new System.NotImplementedException();
         }
 
+        public string UpdateUrlByShortId(string shortId, string userId)
+        {
+            string Output;
+            string query = $"delete from urls where shorturl = '{shortId}' and userId = '{userId}'";
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                using (var tableCmd = connection.CreateCommand())
+                {
+                    connection.Open();
+                    try
+                    {
+                        tableCmd.CommandText = query;
+                        int result = tableCmd.ExecuteNonQuery();
+                        if (result == 0)
+                        {
+                            Output = $"unable to delete, ShortID {shortId}";
+                        }
+                        else Output = $"ShortID {shortId} deleted successfully";
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Something went wrong while deleting shortID : {shortId}, Error = {e.Message}");
+                        Output = "Server error";
+                    }
+                }   
+                
+            }
 
+            return Output;
+        }
 
 
         private ResponseUrl GetURlFromDBByShortUrl(string shortId)

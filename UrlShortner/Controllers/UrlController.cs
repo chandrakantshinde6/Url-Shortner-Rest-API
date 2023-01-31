@@ -41,7 +41,39 @@ namespace UrlShortner.Controllers
             var responseUrl = _urlServices.GetByShortURL(id);
             return new JsonResult(responseUrl);
         }
+
         
+        [HttpGet]
+        [Route("/{id}")]
+        public RedirectResult RedirectUser(string id)
+        {
+            var url = _urlServices.GetByShortURL(id);
+            if (url != null && url.OriginalUrl != null)
+            {
+                return new RedirectResult("http://localhost:5001");
+            }
+            return  new RedirectResult(url.OriginalUrl);
+        }
+        
+        [HttpDelete]
+        [Route("/{id}")]
+        public JsonResult DeleteUrlByShortId(string id)
+        {
+            var result = _urlServices.DeleteUrlByShortId(id);
+            if (result == null)
+            {
+                return new JsonResult(new { messahe = "Something went wrong" });
+            }
+            return new JsonResult( new {message = result});
+        }
+
+
+        [HttpPatch]
+        [Route("/{id}")]
+        public JsonResult UpdateUrlByUserIdAndShortId(string id, [FromBody] ResponseUrl url)
+        {
+            return new JsonResult(new { shortid = id }, new { url.OriginalUrl });
+        }
         
         // GET
         [HttpGet]
