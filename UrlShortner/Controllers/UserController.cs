@@ -13,8 +13,14 @@ namespace UrlShortner.Controllers
         {
             return new JsonResult("Here is your profile");
         }
-        
-        
-        
+        [HttpDelete]
+        [Route("/{id}")]
+        public IActionResult DeleteUser(string userId)
+        {
+
+            return Ok();
+        }
+
+
     }
 }
