@@ -122,10 +122,6 @@ namespace UrlShortner.Services.Url
             
         }
 
-        public List<ResponseUrl> GetUrlsByUserIdAndShortId(string userID, string shortId)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public string UpdateUrlByShortId(string shortId, string userId)
         {
