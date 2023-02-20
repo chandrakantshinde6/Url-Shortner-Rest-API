@@ -41,18 +41,25 @@ namespace UrlShortner.Controllers
             var responseUrl = _urlServices.GetByShortURL(id);
             return new JsonResult(responseUrl);
         }
-
+        
+        
         
         [HttpGet]
         [Route("/{id}")]
         public RedirectResult RedirectUser(string id)
         {
             var url = _urlServices.GetByShortURL(id);
-            if (url != null && url.OriginalUrl != null)
+            if (url == null && url.OriginalUrl != null)
             {
                 return new RedirectResult("http://localhost:5001");
             }
-            return  new RedirectResult(url.OriginalUrl);
+
+            string originalURl = url.OriginalUrl;
+            bool containProtocol = originalURl.StartsWith("https://");
+            if (!containProtocol)
+                originalURl = originalURl.Insert(0, "https://");
+            
+            return  new RedirectResult(originalURl);
         }
         
         [HttpDelete]

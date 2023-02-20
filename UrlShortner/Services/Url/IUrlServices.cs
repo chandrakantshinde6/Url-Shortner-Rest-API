@@ -9,8 +9,6 @@ namespace UrlShortner.Services.Url
         public string CreateShortUrl(RequestUrl url);
         public List<ResponseUrl> GetUrlsByUserId(string userId);
         public string DeleteUrlByShortId(string shortId);
-        public List<ResponseUrl> GetUrlsByUserIdAndShortId(string userID, string shortId);
-
         public string UpdateUrlByShortId(string shortId, string userId);
 
 
